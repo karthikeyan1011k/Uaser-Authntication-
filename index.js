@@ -1,7 +1,7 @@
 const express = require('express');
 const app = express();
 const router = express.Router();
-//require('dotenv').config();
+require('dotenv').config();
 const db = require('./config/mongoose');
 const session = require('express-session');
 const MongoStore = require('connect-mongo');
@@ -31,11 +31,11 @@ app.set('views','./views');
 
 // Configure the session middleware
 app.use(session({
-    secret: "karthi",
+    secret: process.env.EXPRESS_SESSION_SECRET,
     resave: false,
     saveUninitialized: false,
     store: MongoStore.create({
-        mongoUrl: "mongodb://127.0.0.1:27017/Login_user_details", 
+        mongoUrl: process.env.MONGO_URI, 
         autoRemove: 'native', // remove expired sessions automatically
         ttl: 7 * 24 * 60 * 60 // set session TTL to 7 days
       })
