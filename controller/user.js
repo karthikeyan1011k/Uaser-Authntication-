@@ -1,10 +1,6 @@
 const User = require('../models/user');
 const bcrypt = require('bcrypt');
 
-exports.renderHome = (req, res) => {
-    res.render('home', { flash: req.flash() });
-  };
-
 
 module.exports.renderSignIn = function (req, res) {
     if(req.isAuthenticated()){
@@ -33,14 +29,14 @@ module.exports.renderResetPassword = function(req,res){
 }
 
 //update password
-module.exports.updatePassword = async function(req,res){
-    try{
-        
-        const user = await User.findOne({email:req.body.email});
+exports.updatePassword = async function (req, res) {
+    try {
+
+        const user = await User.findOne({ email: req.body.email });
         //match current password
         const passwordMatches = await bcrypt.compare(req.body.password, user.password);
-        if(!passwordMatches){
-            req,flash('error','current password entered is invalid, try again:');
+        if (!passwordMatches) {
+            req.flash('error', 'Current password entered is invalid, try again:');
             return res.redirect('back');
         }
 
@@ -49,12 +45,12 @@ module.exports.updatePassword = async function(req,res){
         const hash = await bcrypt.hash(plaintextPassword, saltRounds);
         user.password = hash;
         await user.save();
-        req.flash('success','Password updated');
+        req.flash('success', 'Password updated');
         return res.redirect('/destroy-session');
 
     }
-    catch(e){
-        console.log('Error in resting password: ',e);
+    catch (e) {
+        console.log('Error in resting password: ', e);
     }
 
 }
