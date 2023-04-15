@@ -1,12 +1,15 @@
 const User = require('../models/user');
 const bcrypt = require('bcrypt');
 
-
+exports.renderHome = (req, res) => {
+    res.render('home', { flash: req.flash() });
+  };
 
 
 module.exports.renderSignIn = function (req, res) {
     if(req.isAuthenticated()){
-        return res.redirect('/home');
+
+        return res.redirect('/home', { flash: req.flash() } );
     }
     var flash = req.flash();
     return res.render('sign_in', { title: 'Sign In', flash: flash  });
@@ -14,7 +17,7 @@ module.exports.renderSignIn = function (req, res) {
 
 module.exports.renderSignUp = function (req, res) {
     if(req.isAuthenticated()){
-        return res.redirect('/home');
+        return res.redirect('/home' , { flash: req.flash() });
     }
     var flash = req.flash();
     return res.render('sign_up', { title: 'Sign Up', flash: flash  });
@@ -22,7 +25,7 @@ module.exports.renderSignUp = function (req, res) {
 }
 
 module.exports.renderHome = function (req, res) {
-    return res.render('home', { title: 'Home Page', user: req.user });
+    return res.render('home', { title: 'Home Page', user: req.user ,  flash: req.flash() });
 }
 
 module.exports.renderResetPassword = function(req,res){
