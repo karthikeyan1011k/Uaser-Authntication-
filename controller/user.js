@@ -4,8 +4,7 @@ const bcrypt = require('bcrypt');
 
 module.exports.renderSignIn = function (req, res) {
     if(req.isAuthenticated()){
-
-        return res.redirect('/home', { flash: req.flash() } );
+        return res.redirect(302, '/home', { flash: req.flash() } );
     }
     var flash = req.flash();
     return res.render('sign_in', { title: 'Sign In', flash: flash  });
@@ -13,12 +12,12 @@ module.exports.renderSignIn = function (req, res) {
 
 module.exports.renderSignUp = function (req, res) {
     if(req.isAuthenticated()){
-        return res.redirect('/home' , { flash: req.flash() });
+        return res.redirect(302, '/home' , { flash: req.flash() });
     }
     var flash = req.flash();
     return res.render('sign_up', { title: 'Sign Up', flash: flash  });
-
 }
+
 
 module.exports.renderHome = function (req, res) {
     return res.render('home', { title: 'Home Page', user: req.user ,  flash: req.flash() });
