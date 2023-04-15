@@ -7,7 +7,8 @@ module.exports.renderSignIn = function (req, res) {
         return res.redirect(302, '/home', { flash: req.flash() } );
     }
     var flash = req.flash();
-    return res.render('sign_in', { title: 'Sign In', flash: flash  });
+    return return res.redirect(302, '/home', { flash: req.flash() });
+
 }
 
 module.exports.renderSignUp = function (req, res) {
