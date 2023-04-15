@@ -5,14 +5,14 @@ const User = require('../models/user');
 const bcrypt = require('bcrypt');
 
 // Configure the local strategy with a custom verify function
-const localStrategy = new LocalStrategy({usernameField: 'email',passwordField: 'password'},async (email, password, done) => {
+const localStrategy = new LocalStrategy({usernameField: 'email',passwordField: 'password'},async (email, password, done, req) => {
     try {
       // Find the user with the given username
       const user = await User.findOne({ email });
   
       // If the user does not exist, return an error
       if (!user) {
-        console.log('User not found');
+        console.log('error', 'User not found');
         return done(null, false, { message: 'Incorrect email' });
       }
 
@@ -23,7 +23,7 @@ const localStrategy = new LocalStrategy({usernameField: 'email',passwordField: '
   
       //verify password
       if (!passwordMatches) {
-        console.log('Invalid password');
+        console.log('error', 'Invalid password');
         return done(null, false);
       }
       
@@ -32,12 +32,9 @@ const localStrategy = new LocalStrategy({usernameField: 'email',passwordField: '
       return done(null, user);
       
     } catch (err) {
-        console.log('Error while authenticating user');
+        console.log('error', 'Error while authenticating user');
       return done(err);
     }
   });
 
 module.exports = localStrategy;
-
-  
- 

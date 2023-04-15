@@ -1,9 +1,10 @@
 const express = require('express');
 const app = express();
 const router = express.Router();
-//require('dotenv').config();
+require('dotenv').config();
 const db = require('./config/mongoose');
 const session = require('express-session');
+const flash = require('connect-flash');
 const MongoStore = require('connect-mongo');
 const passport = require('passport');
 const localStrategy = require('./config/passport-local');
@@ -31,15 +32,16 @@ app.set('views','./views');
 
 // Configure the session middleware
 app.use(session({
-    secret: "karthi",
+    secret: process.env.EXPRESS_SESSION_SECRET,
     resave: false,
     saveUninitialized: false,
     store: MongoStore.create({
-        mongoUrl: "mongodb://127.0.0.1:27017/Login_user_details", 
+        mongoUrl: process.env.MONGO_URI, 
         autoRemove: 'native', // remove expired sessions automatically
         ttl: 7 * 24 * 60 * 60 // set session TTL to 7 days
       })
 }));
+app.use(flash());
 
 
 // Initialize Passport and use the local strategy

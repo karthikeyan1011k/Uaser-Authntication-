@@ -17,7 +17,7 @@ router.post('/update-password',passport.authenticate('local',{failureRedirect:'b
 router.get('/auth/google', passport.authenticate('google',{scope:['profile','email']}));
 
 //callback from google
-router.get('/auth/google/callback', passport.authenticate('google',{failureRedirect:'/'}), controller.createSession);
+router.get('/user/auth/google/callback', passport.authenticate('google',{failureRedirect:'/'}), controller.createSession);
 
 
 
