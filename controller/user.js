@@ -2,25 +2,26 @@ const User = require('../models/user');
 const bcrypt = require('bcrypt');
 
 
+
+
 module.exports.renderSignIn = function (req, res) {
     if(req.isAuthenticated()){
-        return res.redirect(302, '/home', { flash: req.flash() } );
+        return res.redirect('/home');
     }
-    var flash = req.flash();
-    return res.render('sign_in', { title: 'Sign In', flash: flash  });
+    return res.render('sign_in', { title: 'Sign In' });
 }
+
 
 module.exports.renderSignUp = function (req, res) {
     if(req.isAuthenticated()){
-        return res.redirect(302, '/home' , { flash: req.flash() });
+        return res.redirect('/home');
     }
-    var flash = req.flash();
-    return res.render('sign_up', { title: 'Sign Up', flash: flash  });
+    return res.render('sign_up', { title: 'Sign Up' });
+
 }
 
-
 module.exports.renderHome = function (req, res) {
-    return res.render('home', { title: 'Home Page', user: req.user ,  flash: req.flash() });
+    return res.render('home', { title: 'Home Page', user: req.user });
 }
 
 module.exports.renderResetPassword = function(req,res){
@@ -28,14 +29,14 @@ module.exports.renderResetPassword = function(req,res){
 }
 
 //update password
-exports.updatePassword = async function (req, res) {
-    try {
-
-        const user = await User.findOne({ email: req.body.email });
+module.exports.updatePassword = async function(req,res){
+    try{
+        
+        const user = await User.findOne({email:req.body.email});
         //match current password
         const passwordMatches = await bcrypt.compare(req.body.password, user.password);
-        if (!passwordMatches) {
-            req.flash('error', 'Current password entered is invalid, try again:');
+        if(!passwordMatches){
+            console.log('current password entered is invalid, try again:');
             return res.redirect('back');
         }
 
@@ -44,12 +45,12 @@ exports.updatePassword = async function (req, res) {
         const hash = await bcrypt.hash(plaintextPassword, saltRounds);
         user.password = hash;
         await user.save();
-        req.flash('success', 'Password updated');
+        console.log('Password updated');
         return res.redirect('/destroy-session');
 
     }
-    catch (e) {
-        console.log('Error in resting password: ', e);
+    catch(e){
+        console.log('Error in reseting password: ',e);
     }
 
 }
@@ -69,7 +70,7 @@ module.exports.create = async function (req, res) {
         //check if user already exist
         const user = await User.findOne({email:req.body.email});
         if(user){
-            req.flash('info','User already exist. Please sign-in');
+            console.log('User already exist');
                 
             return res.redirect('back');
         }
@@ -99,7 +100,7 @@ module.exports.create = async function (req, res) {
             console.log('New User created: ', savedUser);
         }
 
-        req.flash('success','New User created:')
+              
 
         return res.redirect('/');
 
