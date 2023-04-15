@@ -8,14 +8,16 @@ module.exports.renderSignIn = function (req, res) {
     if(req.isAuthenticated()){
         return res.redirect('/home');
     }
-    return res.render('sign_in', { title: 'Sign In' });
+    var flash = req.flash();
+    return res.render('sign_in', { title: 'Sign In', flash: flash  });
 }
 
 module.exports.renderSignUp = function (req, res) {
     if(req.isAuthenticated()){
         return res.redirect('/home');
     }
-    return res.render('sign_up', { title: 'Sign Up' });
+    var flash = req.flash();
+    return res.render('sign_up', { title: 'Sign Up', flash: flash  });
 
 }
 
@@ -35,7 +37,7 @@ module.exports.updatePassword = async function(req,res){
         //match current password
         const passwordMatches = await bcrypt.compare(req.body.password, user.password);
         if(!passwordMatches){
-            console.log('current password entered is invalid, try again:');
+            req,flash('error','current password entered is invalid, try again:');
             return res.redirect('back');
         }
 
@@ -44,12 +46,12 @@ module.exports.updatePassword = async function(req,res){
         const hash = await bcrypt.hash(plaintextPassword, saltRounds);
         user.password = hash;
         await user.save();
-        console.log('Password updated');
+        req.flash('success','Password updated');
         return res.redirect('/destroy-session');
 
     }
     catch(e){
-        console.log('Error in reseting password: ',e);
+        console.log('Error in resting password: ',e);
     }
 
 }
@@ -69,7 +71,7 @@ module.exports.create = async function (req, res) {
         //check if user already exist
         const user = await User.findOne({email:req.body.email});
         if(user){
-            console.log('User already exist');
+            req.flash('info','User already exist. Please sign-in');
                 
             return res.redirect('back');
         }
@@ -99,7 +101,7 @@ module.exports.create = async function (req, res) {
             console.log('New User created: ', savedUser);
         }
 
-              
+        req.flash('success','New User created:')
 
         return res.redirect('/');
 

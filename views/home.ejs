@@ -28,6 +28,18 @@
     </header>
     <!-- Rest of HTML code here -->
 
+    <% if (flash.success && flash.success.length > 0) { %>
+      <div class="alert alert-success">
+        <%= flash.success %>
+      </div>
+    <% } else if (flash.error && flash.error.length > 0) { %>
+      <div class="alert alert-danger">
+        <%= flash.error %>
+      </div>
+    <% } %>
+    
+   
+
     <div class="container">
       <h1 class="display-1 text-center mt-5">Hello, <%=user.name%></h1>
     </div>
